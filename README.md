@@ -89,7 +89,8 @@ gatling.bat --run-mode local --simulation mytest.MyBasicSimulation
 ![image](./run_gatling.gif)
 
 ### 結果の確認
-HTMLで出力されてブラウザで確認できます
+resultsフォルダ に HTML形式で出力されてブラウザで確認できます。
+
 ![image](./Gatling-Stats.gif)
 
 ## まとめ
