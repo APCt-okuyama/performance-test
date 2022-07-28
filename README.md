@@ -94,9 +94,11 @@ resultsフォルダ に HTML形式で出力されてブラウザで確認でき�
 ![image](./Gatling-Stats.gif)
 
 ## まとめ
-コマンドラインツールの為か、JMeterより軽く動く気がする。
+JMeterより軽く動く気がする。NettyフレームワークとAkkaツールキットを使用しているため高パフォーマンス。
 ※Jmeterより圧倒的に早い気がするが今後のAPIの試験などで要確認
 
 gatlingは 結果をhtml形式できれいに表示してくれる。
 
 
+参考サイト
+https://www.baeldung.com/gatling-jmeter-grinder-comparison
