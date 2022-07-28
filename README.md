@@ -1,6 +1,6 @@
 # performance-test
 
-jmeter vs gatling
+gatling を利用してみる
 
 ## install
 
@@ -94,6 +94,9 @@ resultsフォルダ に HTML形式で出力されてブラウザで確認でき�
 ![image](./Gatling-Stats.gif)
 
 ## まとめ
-簡単なテストであれば大きな違いはない。慣れている方を利用する。
+コマンドラインツールの為か、JMeterより軽く動く気がする。
+※Jmeterより圧倒的に早い気がするが今後のAPIの試験などで要確認
+
 gatlingは 結果をhtml形式できれいに表示してくれる。
+
 
