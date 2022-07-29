@@ -1,27 +1,29 @@
-# performance-test
+# 負荷試験ツール Gatling
 
-gatling を利用してみる
+gatling を利用してみる。今までは JMeter を利用していたのですが gatling というツールを試しに使ってみたので感想です。
 
-## install
+## インストール
 
 両方とも zip を ダウンロードして実行するだけで簡単に利用開始できる。  
-windwos, linuxともに実行可能  
+Windows, Linuxともに実行可能 
 
 ## 実行環境 Java 8+ が必要
+
+JavaVMで動作するので、JMeterと同じですね。
+
+検証環境は下記の通り。
 ```
 Windows 10 Pro
 プロセッサ Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz   2.11 GHz
 Memory 16.0 GB (15.8 GB 使用可能)
-```
 
-```
 java -version
 openjdk version "11.0.12" 2021-07-20
 ```
 
-## シナリオ作成
+## シナリオ作成について
 JMeter : GUI or XML  
-Gatling : Scala、Javaで書くことになる。GUIはなし？  
+Gatling : Scala、Javaで書くことになる。GUIはない（？）  
 
 ## Gatlingのシナリオ作成・実行・結果の確認
 
@@ -29,9 +31,25 @@ Gatling : Scala、Javaで書くことになる。GUIはなし？
 user-files/simulation以下にDSL(Javaのプログラム)を配置し実行
 ※package名を分かりやすものに変更しておく
 
-例: MyBasicSimulation.java
+例: MyBasicSimulation.java 100 userが 10回
 ```
 cat user-files/simulations/MyBasicSimulation.java
+/*
+ * Copyright 2011-2022 GatlingCorp (https://gatling.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package mytest;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
@@ -46,7 +64,7 @@ public class MyBasicSimulation extends Simulation {
   HttpProtocolBuilder httpProtocol =
       http
           // Here is the root for all relative URLs
-          .baseUrl("https://myreactstorage001.z22.web.core.windows.net")
+          .baseUrl("テストサーバーのURL")
           // Here are the common headers
           .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
           .doNotTrackHeader("1")
@@ -57,23 +75,13 @@ public class MyBasicSimulation extends Simulation {
 
   // A scenario is a chain of requests and pauses
   ScenarioBuilder scn =
-      scenario("My Scenario Name")
-          .exec(http("request_1").get("/"))
-          .exec(http("request_2").get("/"))
-          .exec(http("request_3").get("/"))
-          .exec(http("request_4").get("/"))
-          .exec(http("request_5").get("/"))
-          .exec(http("request_6").get("/"))
-          .exec(http("request_7").get("/"))
-          .exec(http("request_8").get("/"))
-          .exec(http("request_9").get("/"))
-          .exec(http("request_10").get("/"));
-          //.pause(1)          
-          //.pause(Duration.ofMillis(629))          
+      scenario("My Scenario Name").repeat(10).on(
+        exec(http("request_1").get("/"))
+      );
   {
     setUp(
       scn.injectOpen(        
-        atOnceUsers(10)) //
+        atOnceUsers(100)) //
         .protocols(httpProtocol)
     );
   }
@@ -94,11 +102,9 @@ resultsフォルダ に HTML形式で出力されてブラウザで確認でき�
 ![image](./Gatling-Stats.gif)
 
 ## まとめ
-JMeterより軽く動く気がする。NettyフレームワークとAkkaツールキットを使用しているため高パフォーマンス。
-※Jmeterより圧倒的に早い気がするが今後のAPIの試験などで要確認
-
-gatlingは 結果をhtml形式できれいに表示してくれる。
-
+簡単に動かしてみただけでしたが、JMeterより軽く動く気がする。調べてみると「NettyフレームワークとAkkaツールキットを使用しているため高パフォーマンス」とのこと。多くのクライアント数を想定した負荷試験の場合はJMeterより優秀だと思います。
+結果を html形式 できれいに表示してくれるのも嬉しいところ。(サイズは6MB程度)
+今後しばらくは Gatling を利用してみようと思います。
 
 参考サイト
 https://www.baeldung.com/gatling-jmeter-grinder-comparison
